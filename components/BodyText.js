@@ -7,7 +7,7 @@ const BodyText = props =>{
 
 const styles = StyleSheet.create({
     bodyText:{
-        color:'white',
+        color:'#888',
         fontSize: 14
     }
 });
