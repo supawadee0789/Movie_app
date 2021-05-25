@@ -14,7 +14,6 @@ import {
   LayoutProvider,
 } from "recyclerlistview";
 import MovieItem from "../components/MovieItemComponent";
-
 const screen_width = Dimensions.get("window").width;
 class MovieListScreen extends React.Component {
   getTotalPage = async () => {
@@ -93,14 +92,14 @@ class MovieListScreen extends React.Component {
       <MovieItem
         title={title}
         img={poster_path}
-        // releaseDate={release_date}
+        releaseDate={release_date}
         voteAverage={vote_average}
-        // onViewDetail={() => {
-        //   props.navigation.navigate("MovieDetail", {
-        //     movieTitle: title,
-        //     movieData: data,
-        //   });
-        // }}
+        onViewDetail={() =>{
+          this.props.navigation.navigate("MovieDetail", {
+            movieTitle: title,
+            movieData: data,
+          });
+        }}
       />
     );
   };
