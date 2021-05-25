@@ -14,7 +14,7 @@ const MovieItem = (props) => {
         />
         <View style={styles.text}>
           <Text style={styles.title}>{props.title}</Text>
-          <BodyText>{"(" + props.releaseDate.split("-")[0] + ")"}</BodyText>
+          {/* <BodyText>{"(" + props.releaseDate.split("-")[0] + ")"}</BodyText> */}
           <BodyText style={styles.rate}>
             <AntDesign name="star" size={14} color="#FDCE2A" />{" "}
             {props.voteAverage}

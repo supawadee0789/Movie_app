@@ -22,7 +22,6 @@ class MovieListScreen extends React.Component {
       "https://api.themoviedb.org/3/movie/now_playing?api_key=c1618550083ac39008a92222d9c8a6a9&language=en-US&page=1"
     );
     let json = await res.json();
-    console.log(json.total_pages);
     return json.total_pages;
   };
 
@@ -41,7 +40,7 @@ class MovieListScreen extends React.Component {
     this.state = {
       page: 1,
       list: new DataProvider((r1, r2) => r1 !== r2),
-      oldDataArr: [],
+      oldDataArr: {},
     };
     this.getTotalPage;
     this.layoutProvider = new LayoutProvider(
@@ -61,29 +60,32 @@ class MovieListScreen extends React.Component {
         }
       }
     );
-    console.log('constructor!')
+    console.log('constructor!');
   }
   async componentDidMount() {
     let pageCount = this.state.page;
     let dataLoading = await this.getData(this.state.page);
     this.setState({
-      page: pageCount + 1,
+      page: pageCount,
       list: new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(dataLoading),
-      oldDataArr: dataLoading,
+      oldDataArr: dataLoading
     });
-    console.log('conponent did mount!')
+    // console.log(dataLoading)
+    console.log('conponent did mount!');
   }
 
   updateItem = async () => {
-    let page = this.state.page;
+    let page = this.state.page+1;
     let lastList = this.state.oldDataArr;
+    let newData=[];
     let dataLoading = await this.getData(page);
-    let newData = Object.assign(lastList,dataLoading);
+    newData = [...lastList,...dataLoading];
     this.setState({
-      page: page + 1,
+      page: page,
       list: new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(newData),
-      oldDataArr: newData,
+      oldDataArr:newData,
     });
+
   };
   rowRenderer = (type, data) => {
     const { title, poster_path, release_date, vote_average } = data;
@@ -91,7 +93,7 @@ class MovieListScreen extends React.Component {
       <MovieItem
         title={title}
         img={poster_path}
-        releaseDate={release_date}
+        // releaseDate={release_date}
         voteAverage={vote_average}
         // onViewDetail={() => {
         //   props.navigation.navigate("MovieDetail", {
@@ -102,18 +104,6 @@ class MovieListScreen extends React.Component {
       />
     );
   };
-  // const [isLoading, setLoading] = useState(true);
-  // const [data, setData] = useState([]);
-
-  // useEffect(() => {
-  //   fetch(
-  //     "https://api.themoviedb.org/3/movie/now_playing?api_key=c1618550083ac39008a92222d9c8a6a9&language=en-US&page=2"
-  //   )
-  //     .then((response) => response.json())
-  //     .then((json) => setData(json.results))
-  //     .catch((error) => console.error(error))
-  //     .finally(() => setLoading(false));
-  // }, []);
   render() {
     return (
       <View style={styles.screen}>
@@ -121,31 +111,8 @@ class MovieListScreen extends React.Component {
           rowRenderer={this.rowRenderer}
           dataProvider={this.state.list}
           layoutProvider={this.layoutProvider}
-          onEndReached={this.updateItem}
-          disableRecycling={false}
+          onScroll={this.updateItem}
         />
-        {/* {isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <MovieItem
-              title={item.title}
-              img={item.poster_path}
-              releaseDate={item.release_date}
-              voteAverage={item.vote_average}
-              onViewDetail={() => {
-                props.navigation.navigate("MovieDetail", {
-                  movieTitle: item.title,
-                  movieData: item
-                });
-              }}
-            />
-          )}
-        />
-      )} */}
       </View>
     );
   }
